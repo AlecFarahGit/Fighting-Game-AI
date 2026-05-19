@@ -5,14 +5,15 @@
 
 
 ## Overview
-This project utilizes a Reinforcement Learning agent trained to play a classic NES fighting game against the built-in CPU. The environment bridges a Python-based machine learning backend with the FCEUX NES emulator using a custom Lua scripting interface and socket communication.
+
+This project utilizes a Reinforcement Learning agent trained to play a NES fighting game against thfroe built-in CPU. The environment bridges a Python-based machine learning backend with the FCEUX NES emulator using a custom Lua scripting interface and pipe communication.
 
 ## Architecture
 
 The system is divided into three main components:
 1. **FCEUX Emulator:** Runs the NES ROM.
-2. **Lua Bridge (`Luafiles.lua`, `EmulationInterface.py`):** Handles startup of FCEUX enviroment, reads memory addresses (RAM) to extract game state (player health and position) and writes controller inputs. It communicates with the Python server via a pipe.
-3. **Python Agent (`AI.py`):** Receives the game state, processes it through a Deep Q-Network (DQN) or Proximal Policy Optimization (PPO) algorithm, and sends the optimal next action back to the emulator.
+2. **Lua Bridge (`Luafiles.lua`, `EmulationInterface.py`):** Handles startup of FCEUX enviroment, reads memory addresses (RAM) to extract game state (player health and position) and writes controller inputs. It communicates with the Python script via a pipe.
+3. **Python Agent (`AI.py`):** Receives the game state, processes it through a Deep Q-Network algorithm, and sends the optimal next action back to the emulator.
 
 ## Prerequisites
 
@@ -26,30 +27,30 @@ The system is divided into three main components:
 
 2. Install the required Python dependencies:
    * `pip install torch gymnasium matplotlib` 
-   *(Dependencies: `torch`, `gymnasium`)*
+   *(Dependencies: `torch`, `gymnasium`, `matplotlib`)*
 
 ## Setup & Usage
 
 
 ### 1. Start Training
-In a new terminal, launch the Python training script:
+Launch the Python training script:
 ```bash
 python AI.py
 ```
 
 ### 2. Watch agent in real time
-Watch the agent train to play against the CPU in real time
+Watch the agent train while playing against the CPU in real time
 
 ---
 
-## How It Works: The Deep Q-Network (DQN) Agent
+## How It Works: The Deep Q-Network Agent
 
-The brain of this AI agent is built using a **Deep Q-Network (DQN)** implemented in PyTorch. The agent learns to play the game through trial and error, utilizing a reinforcement learning loop that balances exploring new moves and exploiting known winning strategies.
+The brain of this AI agent is built using a Deep Q-Network implemented in PyTorch. The agent learns to play the game through trial and error, utilizing a reinforcement learning loop that balances exploring new moves and exploiting known winning strategies.
 
 ### 1. The Neural Network Architecture
 The agent evaluates the game state and decides on an action using a Feed-Forward Neural Network. 
 * **Input:** The current state of the emulator (`n_observations`).
-* **Hidden Layers:** The network consists of four hidden layers, each containing **254 neurons**. It uses ReLU (Rectified Linear Unit) activation functions to process complex, non-linear relationships in the game state.
+* **Hidden Layers:** The network consists of four hidden layers, each containing 254 neurons. It uses ReLU (Rectified Linear Unit) activation functions to process complex, non-linear relationships in the game state.
 * **Output:** The final layer outputs a predicted "Q-value" (expected future reward) for each of the **18 possible controller actions**. The action with the highest Q-value is generally chosen.
 
 ### 2. Decision Making: The Epsilon-Greedy Strategy
@@ -75,7 +76,6 @@ The core training loop involves calculating how "wrong" the network's prediction
 
 ## Directory Structure
 ```text
-.
 ├── runs/                  # Saved tfevents for analysis
 ├── AI.py
 ├── EmulationInterface.py
